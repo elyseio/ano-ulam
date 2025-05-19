@@ -1,7 +1,6 @@
 from curl_cffi import requests
 from bs4 import BeautifulSoup
 
-# url = 'https://panlasangpinoy.com/recipes/page/1/'
 
 def get_request(url):
     '''
@@ -32,16 +31,24 @@ def parse_data(url):
     main_content = soup.select_one('main.content.entries-container')
     recipes = main_content.select('article[class*="recipes"]')
 
+    all_recipes = []
+
     for recipe in recipes:
-        recipe_title = recipe.select_one('.entry-title').get_text()
+        recipe_name = recipe.select_one('.entry-title').get_text()
         recipe_link = recipe.select_one('.entry-title-link').get('href')
         recipe_img = recipe.select_one('.entry-image').get('data-src')
 
+        all_recipes.append({
+            'recipe_name': recipe_name or None,
+            'recipe_link': recipe_link or None,
+            'recipe_img': recipe_img or None
+        })
+
+    return all_recipes
 
 
 def main():
     url = 'https://panlasangpinoy.com/recipes/page/1/'
-    parse_data(url)
 
 
 if __name__ == '__main__':
